@@ -8,33 +8,37 @@
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background-color: #f7f9fc;
-      padding: 2rem;
       margin: 0;
+      padding: 1rem;
       color: #333;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
       text-align: center;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #2f80ed;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
+    }
+    .table-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      overflow-x: auto;
     }
     table {
       width: 100%;
-      max-width: 1100px;
       border-collapse: collapse;
       background-color: #fff;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      min-width: 600px;
     }
     th, td {
-      padding: 16px;
+      padding: 12px;
       text-align: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       border-bottom: 1px solid #f0f0f0;
     }
     th {
@@ -54,35 +58,39 @@
     }
     .summary-row td {
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #333;
     }
     .summary-row td:first-child {
       text-align: left;
-      padding-left: 2rem;
+      padding-left: 1rem;
     }
     .total-value {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #333;
     }
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
+
+    @media (max-width: 480px) {
       h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
-      table {
-        width: 100%;
+      th, td {
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+      .summary-row td {
         font-size: 0.9rem;
+      }
+      .total-value {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div>
-    <h1>My AI Stock Portfolio</h1>
+  <h1>My AI Stock Portfolio</h1>
+  <div class="table-wrapper">
     <table id="portfolio-table">
       <thead>
         <tr>
@@ -128,11 +136,11 @@
     ];
 
     async function fetchStockPrice(symbol) {
-      const apiKey = 'd0iddohr01qrfsaff1j0d0iddohr01qrfsaff1jg'; // ← החלף כאן את המפתח שלך
+      const apiKey = 'd0iddohr01qrfsaff1j0d0iddohr01qrfsaff1jg'; // ← הכנס את המפתח שלך
       const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`;
       const res = await fetch(url);
       const data = await res.json();
-      return data.c; // current price
+      return data.c;
     }
 
     async function populateTable() {
@@ -141,7 +149,7 @@
       let totalBuy = 0;
       let totalProfit = 0;
 
-      tbody.innerHTML = '';  // Clear previous rows
+      tbody.innerHTML = '';
 
       for (const stock of portfolio) {
         const currentPrice = await fetchStockPrice(stock.symbol);
@@ -165,7 +173,6 @@
         tbody.appendChild(row);
       }
 
-      // Update Total
       document.getElementById('total-value').textContent = `$${totalValue.toFixed(2)}`;
       document.getElementById('total-change-pct').textContent = `${((totalProfit / totalBuy) * 100).toFixed(2)}%`;
       document.getElementById('total-sum').textContent = `$${totalBuy.toFixed(2)}`;
