@@ -1,99 +1,178 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My AI Stock Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Stock Portfolio - Wall Street Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #f7f9fc;
+      font-family: 'Inter', sans-serif;
       margin: 0;
-      padding: 1rem;
-      color: #333;
+      padding: 2rem 1rem 5rem;
+      background: #0B1B2B;
+      color: #CBD5E1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
+      min-height: 100vh;
     }
     h1 {
-      font-size: 2rem;
-      color: #2f80ed;
-      margin-bottom: 1rem;
+      color: #38BDF8;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px #0ea5e9;
     }
-    .table-wrapper {
+    .table-container {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1000px;
       overflow-x: auto;
+      background: #112240;
+      border-radius: 12px;
+      box-shadow: 0 0 30px #0ea5e9;
+      padding: 1rem 1.5rem;
+      border: 1px solid #38BDF8;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      min-width: 600px;
+      font-size: 1rem;
+      color: #CBD5E1;
+      user-select: none;
+    }
+    thead {
+      background-color: #0ea5e9;
+      color: #0B1B2B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
     }
     th, td {
-      padding: 12px;
+      padding: 12px 16px;
       text-align: center;
-      font-size: 0.95rem;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid #1E293B;
+      vertical-align: middle;
     }
-    th {
-      background-color: #2f80ed;
-      color: white;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-    tr:hover {
-      background-color: #f1f5f9;
+    tbody tr:hover {
+      background-color: #184E77;
+      transition: background 0.3s;
+      cursor: default;
     }
     .positive {
-      color: #28a745;
+      color: #22C55E;
+      font-weight: 700;
     }
     .negative {
-      color: #dc3545;
+      color: #EF4444;
+      font-weight: 700;
     }
-    .summary-row td {
-      font-weight: bold;
-      font-size: 1rem;
-      color: #333;
+    .summary-row {
+      font-weight: 700;
+      background-color: #1E293B;
+      color: #38BDF8;
     }
     .summary-row td:first-child {
       text-align: left;
-      padding-left: 1rem;
     }
     .total-value {
+      font-weight: 700;
       font-size: 1.1rem;
-      font-weight: 600;
-      color: #333;
+    }
+    /* לוגואים עגולים */
+    .logo-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+      box-shadow: 0 0 6px #0ea5e9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .logo-avatar img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+    /* שורת מדדים תחתונה */
+    .ticker-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      color: black;
+      font-weight: 700;
+      font-size: 1.6rem;
+      padding: 14px 20px;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 1000;
+      user-select: none;
+    }
+    .ticker-content {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollLeft 20s linear infinite;
+    }
+    @keyframes scrollLeft {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+    .ticker-item {
+      display: inline-block;
+      margin-right: 80px;
+    }
+    .change-positive {
+      color: #22C55E; /* ירוק */
+    }
+    .change-negative {
+      color: #EF4444; /* אדום */
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
       }
       th, td {
-        padding: 10px;
         font-size: 0.85rem;
+        padding: 8px 10px;
       }
-      .summary-row td {
-        font-size: 0.9rem;
+      .ticker-bar {
+        font-size: 1.2rem;
+        padding: 10px 15px;
       }
-      .total-value {
-        font-size: 1rem;
+      .ticker-item {
+        margin-right: 40px;
       }
     }
   </style>
 </head>
 <body>
   <h1>My AI Stock Portfolio</h1>
-  <div class="table-wrapper">
-    <table id="portfolio-table">
+
+  <div class="table-container" role="region" aria-label="AI stock portfolio table">
+    <table>
       <thead>
         <tr>
+          <th>Logo</th>
           <th>Symbol</th>
           <th>Quantity</th>
           <th>Buy Price</th>
@@ -102,84 +181,151 @@
           <th>Sum</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Rows will be populated dynamically -->
+      <tbody id="portfolio-body">
+        <!-- Rows inserted here -->
       </tbody>
       <tfoot>
         <tr class="summary-row">
-          <td>Total</td>
-          <td></td>
-          <td></td>
+          <td colspan="3">Total</td>
           <td id="total-value" class="total-value"></td>
+          <td id="total-current-price"></td>
           <td id="total-change-pct" class="total-value"></td>
           <td id="total-sum" class="total-value"></td>
         </tr>
         <tr class="summary-row">
           <td>Profit/Loss ($)</td>
-          <td></td>
-          <td></td>
-          <td colspan="3" id="total-profit" class="total-value"></td>
+          <td colspan="6" id="total-profit" class="total-value"></td>
         </tr>
       </tfoot>
     </table>
   </div>
 
+  <!-- שורת מדדים תחתונה -->
+  <div class="ticker-bar" id="ticker-bar" aria-label="Market indices ticker"></div>
+
   <script>
     const portfolio = [
-      { symbol: 'META', quantity: 1, buyPrice: 653.00 },
-      { symbol: 'MSFT', quantity: 2, buyPrice: 454.40 },
-      { symbol: 'CRM', quantity: 10, buyPrice: 290.85 },
-      { symbol: 'PATH', quantity: 40, buyPrice: 13.06 },
-      { symbol: 'BBAI', quantity: 80, buyPrice: 3.58 },
-      { symbol: 'PLTR', quantity: 5, buyPrice: 128.00 },
-      { symbol: 'GOOGL', quantity: 9, buyPrice: 165.32 }
+      { symbol: 'META', quantity: 1, buyPrice: 653.00, logo: 'https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjEwOTEtMDUucG5n.png' },
+      { symbol: 'MSFT', quantity: 2, buyPrice: 454.40, logo: 'https://g.foolcdn.com/art/companylogos/square/msft.png' },
+      { symbol: 'CRM', quantity: 10, buyPrice: 290.85, logo: 'https://www.salesforce.com/news/wp-content/uploads/sites/3/2021/05/Salesforce-logo.jpg' },
+      { symbol: 'PATH', quantity: 40, buyPrice: 13.06, logo: 'https://yt3.googleusercontent.com/ZwDEmSjmhx5QA0Iw8qQsE7M9RKk5UA-B8VqQumXol3Ah9jHWowOJBkXRAsPc4xzMsSmjReZzbg=s900-c-k-c0x00ffffff-no-rj' },
+      { symbol: 'BBAI', quantity: 80, buyPrice: 3.58, logo: 'https://static.stocktitan.net/company-logo/bbai-lg.png' },
+      { symbol: 'PLTR', quantity: 5, buyPrice: 128.00, logo: 'https://seekvectors.com/files/download/Palantir-02.jpg' },
+      { symbol: 'GOOGL', quantity: 9, buyPrice: 165.32, logo: 'https://yt3.googleusercontent.com/K8WVrQAQHTTwsHEtisMYcNai7p7XIlyEAdZg86qYw78ye57r5DRemHQ9Te4PcD_v98HB-ZvQjQ=s900-c-k-c0x00ffffff-no-rj' }
     ];
 
+    // Finnhub API Key - החלף במפתח האמיתי שלך
+    const API_KEY = 'd0iddohr01qrfsaff1j0d0iddohr01qrfsaff1jg';
+
     async function fetchStockPrice(symbol) {
-      const apiKey = 'd0iddohr01qrfsaff1j0d0iddohr01qrfsaff1jg'; // ← הכנס את המפתח שלך
-      const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      return data.c;
+      const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.c || null;
+      } catch {
+        return null;
+      }
     }
 
     async function populateTable() {
-      const tbody = document.querySelector('tbody');
-      let totalValue = 0;
-      let totalBuy = 0;
+      const tbody = document.getElementById('portfolio-body');
+      let totalCurrentValue = 0;
+      let totalInvested = 0;
       let totalProfit = 0;
 
       tbody.innerHTML = '';
 
       for (const stock of portfolio) {
         const currentPrice = await fetchStockPrice(stock.symbol);
-        const sum = stock.buyPrice * stock.quantity;
-        const netProfit = (currentPrice - stock.buyPrice) * stock.quantity;
-        const changePercent = ((netProfit / sum) * 100).toFixed(2);
+        if(currentPrice === null){
+          // במידה ואין מחיר נוכחי - נציג '--'
+          var displayCurrentPrice = '--';
+          var changePct = '--';
+          var changeClass = '';
+          var valueNow = 0;
+        } else {
+          var displayCurrentPrice = `$${currentPrice.toFixed(2)}`;
+          const sum = stock.buyPrice * stock.quantity;
+          valueNow = currentPrice * stock.quantity;
+          const profit = valueNow - sum;
+          changePct = ((profit / sum) * 100).toFixed(2);
+          changeClass = changePct >= 0 ? 'positive' : 'negative';
 
-        totalValue += currentPrice * stock.quantity;
-        totalBuy += sum;
-        totalProfit += netProfit;
+          totalCurrentValue += valueNow;
+          totalInvested += sum;
+          totalProfit += profit;
+        }
+
+        const sum = stock.buyPrice * stock.quantity;
 
         const row = document.createElement('tr');
         row.innerHTML = `
+          <td class="logo-cell"><div class="logo-avatar"><img src="${stock.logo}" alt="${stock.symbol} logo" /></div></td>
           <td>${stock.symbol}</td>
           <td>${stock.quantity}</td>
           <td>$${stock.buyPrice.toFixed(2)}</td>
-          <td>$${currentPrice.toFixed(2)}</td>
-          <td class="${changePercent >= 0 ? 'positive' : 'negative'}">${changePercent}%</td>
+          <td>${displayCurrentPrice}</td>
+          <td class="${changeClass}">${changePct === '--' ? '--' : changePct + '%'}</td>
           <td>$${sum.toFixed(2)}</td>
         `;
         tbody.appendChild(row);
       }
 
-      document.getElementById('total-value').textContent = `$${totalValue.toFixed(2)}`;
-      document.getElementById('total-change-pct').textContent = `${((totalProfit / totalBuy) * 100).toFixed(2)}%`;
-      document.getElementById('total-sum').textContent = `$${totalBuy.toFixed(2)}`;
+      document.getElementById('total-value').textContent = `$${totalCurrentValue.toFixed(2)}`;
+      document.getElementById('total-sum').textContent = `$${totalInvested.toFixed(2)}`;
+      document.getElementById('total-change-pct').textContent = ((totalInvested === 0) ? '--' : `${((totalProfit / totalInvested) * 100).toFixed(2)}%`);
       document.getElementById('total-profit').textContent = `$${totalProfit.toFixed(2)}`;
     }
 
+    // --- מדדים לשורה התחתונה ---
+
+    const indices = [
+      { label: 'S&P 500', symbol: 'SPY' },
+      { label: 'NASDAQ', symbol: 'QQQ' },
+      { label: 'DOW JONES', symbol: 'DIA' },
+      { label: 'VIX', symbol: 'VXX' },
+      { label: '20Y BOND', symbol: 'TLT' }
+    ];
+
+    async function fetchIndexChange(symbol) {
+      const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        // אחוז שינוי מחושב בין מחיר סגירה למחיר פתיחה
+        return data.dp;
+      } catch {
+        return null;
+      }
+    }
+
+    async function populateTicker() {
+      const tickerBar = document.getElementById('ticker-bar');
+      let tickerHTML = '<div class="ticker-content" aria-live="polite" aria-atomic="true">';
+
+      for (const index of indices) {
+        let change = await fetchIndexChange(index.symbol);
+        if(change === null) {
+          tickerHTML += `<span class="ticker-item">${index.label} --%</span>`;
+        } else {
+          const changeClass = change >= 0 ? 'change-positive' : 'change-negative';
+          tickerHTML += `<span class="ticker-item">${index.label} <span class="${changeClass}">${change.toFixed(2)}%</span></span>`;
+        }
+      }
+
+      tickerHTML += '</div>';
+      tickerBar.innerHTML = tickerHTML;
+    }
+
+    // הפעל ראשונית
     populateTable();
+    populateTicker();
+
+    // רענון כל 30 שניות
+    setInterval(populateTable, 30000);
+    setInterval(populateTicker, 30000);
+
   </script>
 </body>
 </html>
